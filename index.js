@@ -25,7 +25,6 @@ app.get('/articles', function(req, res) {
                     'x-apikey': '64deca382d0dfdd703b0682ab81fb3266fd2d',
                 },
             })
-            console.log(articles.data)
             return articles.data
         } catch (err) {
             console.log(err)
@@ -33,7 +32,6 @@ app.get('/articles', function(req, res) {
     }
 
     getArticles().then((result) => {
-        console.log(result)
         res.json(result)
     })
 })
@@ -140,7 +138,7 @@ const jwtStrategy = new JwtStrategy(jwtOptions, function(payload, next) {
 
 
     getUsers().then((result) => {
-        const user = result.find((user) => user.email === payload.user)
+        user = result.find((user) => user.email === payload.user)
         if (user) {
             next(null, user)
         } else {
@@ -171,14 +169,6 @@ app.post('/login', urlEncodedParser, (req, res) => {
     })
 
 })
-
-app.get(
-    '/private',
-    passport.authenticate('jwt', { session: false }),
-    (req, res) => {
-        res.send('Hello ' + req.user.email)
-    },
-)
 
 app.get('/removeArticle/:id', passport.authenticate('jwt', { session: false }), function(req, res) {
     const config = {
