@@ -138,9 +138,9 @@ const jwtStrategy = new JwtStrategy(jwtOptions, function(payload, next) {
 
 
     getUsers().then((result) => {
-        user = result.find((user) => user.email === payload.user)
-        if (user) {
-            next(null, user)
+        let userResult = result.find((user) => user.email === payload.user)
+        if (userResult) {
+            next(null, userResult)
         } else {
             next(null, false)
         }
