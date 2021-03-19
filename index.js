@@ -5,12 +5,15 @@ const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const passportJWT = require('passport-jwt')
+const cors = require('cors')
 const secret = 'nodeJs'
 const urlEncodedParser = bodyParser.urlencoded({ extended: false })
 const app = express()
 const PORT = process.env.PORT || 5000 // this is very important
 const urlArticle = 'https://projet-fcc3.restdb.io/rest/article'
 const urlAccount = 'https://projet-fcc3.restdb.io/rest/account'
+
+app.use(cors())
 
 /**
  * Listes de tous les articles
