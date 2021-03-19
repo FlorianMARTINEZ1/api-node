@@ -232,19 +232,16 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
     let data = {}
     console.log(req.body);
     async function updateArticle() {
-        console.log("updateArticle");
         getEmailArticle().then((result) => {
-            console.log("getEmail then")
             if (req.user.email == result[0].email) {
-                console.log(req.body);
-                if (typeof req.body["nom"] != "undefined") {
-                    data["nom"] = req.body["nom"]
+                if (typeof req.body.nom != "undefined") {
+                    data.nom = req.body.nom
                 }
-                if (typeof req.body["description"] != "undefined") {
-                    data["description"] = req.body["description"]
+                if (typeof req.body.description != "undefined") {
+                    data.description = req.body.description
                 }
-                if (typeof req.body["prix"] != "undefined") {
-                    data["prix"] = req.body["prix"]
+                if (typeof req.body.prix != "undefined") {
+                    data.prix = req.body.prix
                 }
                 console.log(data);
                 updateArticleRequest()
@@ -257,10 +254,7 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
      * Envoie de la requete de mise à jour
      */
     async function updateArticleRequest() {
-        console.log("updateData");
         const urlUpdate = urlArticle + "/" + req.params.id
-        console.log(urlArticle)
-        console.log(urlUpdate)
         try {
             const response = await axios.put(urlUpdate, data, config)
             return response
