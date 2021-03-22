@@ -39,8 +39,8 @@ app.get('/articles', function(req, res) {
                 },
             })
             return articles.data
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error.response.data);
         }
     }
 
@@ -64,8 +64,8 @@ app.get('/articles/:id', function(req, res) {
             const response = await axios.get(urlArticle, config)
             console.log(response.data)
             return response.data
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error.response.data);
         }
     }
 
@@ -92,7 +92,7 @@ app.post('/newArticle', passport.authenticate('jwt', { session: false }), urlEnc
             let newArticle = await axios.post(urlArticle, data, config)
             return newArticle
         } catch (error) {
-            console.log(error)
+            console.log(error.response.data);
         }
     }
     addArticle().then((result) => {
@@ -115,7 +115,7 @@ app.post('/newAccount', urlEncodedParser, function(req, res) {
             }
             let user = await axios.post(urlAccount, data, config)
         } catch (error) {
-            console.log(error)
+            console.log(error.response.data);
         }
     }
     addUser().then((result) => {
@@ -141,8 +141,8 @@ async function getUsers() {
             },
         })
         return users.data
-    } catch (err) {
-        console.log(err)
+    } catch (error) {
+        console.log(error.response.data);
     }
 }
 
@@ -203,8 +203,8 @@ app.get('/removeArticle/:id', passport.authenticate('jwt', { session: false }), 
                     res.status(401).json({ error: 'User do not match.' })
                 }
             })
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error.response.data);
         }
     }
 
@@ -214,7 +214,7 @@ app.get('/removeArticle/:id', passport.authenticate('jwt', { session: false }), 
             const response = await axios.delete(newURL, config)
             return response
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data);
         }
     }
 
@@ -222,8 +222,8 @@ app.get('/removeArticle/:id', passport.authenticate('jwt', { session: false }), 
         try {
             const response = await axios.get(urlArticle, config)
             return response.data
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error.response.data);
         }
     }
 
@@ -242,7 +242,9 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
             'cache-control': 'no-cache',
         },
     }
-    let data = {}
+    let data = {
+        _id: req.params.id,
+    }
     console.log(req.body);
     async function updateArticle() {
         getEmailArticle().then((result) => {
@@ -252,10 +254,18 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
                 }
                 if (typeof req.body.description != "undefined") {
                     data.description = req.body.description
+                } else {
+                    data.description = ""
                 }
                 if (typeof req.body.prix != "undefined") {
                     data.prix = req.body.prix
+                } else {
+                    data.prix = ""
                 }
+                if (typeof req.body.image != "undefined") {
+                    data.image = req.body.image
+                }
+                data.email = result[0].email
                 console.log(data);
                 updateArticleRequest()
             } else {
@@ -272,7 +282,7 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
             const response = await axios.put(urlUpdate, data, config)
             return response
         } catch (error) {
-            console.log(error)
+            console.log(error.response.data);
         }
     }
 
@@ -284,8 +294,8 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
         try {
             const response = await axios.get(urlArticle, config)
             return response.data
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error.response.data);
         }
     }
 
