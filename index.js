@@ -242,31 +242,23 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
             'cache-control': 'no-cache',
         },
     }
-    let data = {
-        _id: req.params.id,
-    }
-    console.log(req.body);
+    let data = {}
     async function updateArticle() {
         getEmailArticle().then((result) => {
+            data = result[0]
             if (req.user.email == result[0].email) {
                 if (typeof req.body.nom != "undefined") {
                     data.nom = req.body.nom
                 }
                 if (typeof req.body.description != "undefined") {
                     data.description = req.body.description
-                } else {
-                    data.description = ""
                 }
                 if (typeof req.body.prix != "undefined") {
                     data.prix = req.body.prix
-                } else {
-                    data.prix = ""
                 }
                 if (typeof req.body.image != "undefined") {
                     data.image = req.body.image
                 }
-                data.email = result[0].email
-                console.log(data);
                 updateArticleRequest()
             } else {
                 res.status(401).json({ error: 'User do not match.' })
@@ -290,7 +282,6 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
      * Récupération de l'email du créateur de l'article
      */
     async function getEmailArticle() {
-        console.log("Email");
         try {
             const response = await axios.get(urlArticle, config)
             return response.data
