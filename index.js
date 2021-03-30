@@ -114,6 +114,7 @@ app.post('/newAccount', urlEncodedParser, function(req, res) {
                 headers: { 'x-apikey': '64deca382d0dfdd703b0682ab81fb3266fd2d' },
             }
             let user = await axios.post(urlAccount, data, config)
+            return user
         } catch (error) {
             console.log(error.response.data);
         }
