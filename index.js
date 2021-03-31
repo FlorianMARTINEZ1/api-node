@@ -235,7 +235,8 @@ app.get('/removeArticle/:id', passport.authenticate('jwt', { session: false }), 
 
 })
 
-app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session: false }), function(req, res) {
+app.post('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session: false }), function(req, res) {
+
 
     const config = {
         headers: {
@@ -245,26 +246,26 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
     }
     let data = {}
     async function updateArticle() {
-        getEmailArticle().then((result) => {
-            data = result[0]
-            if (req.user.email == result[0].email) {
-                if (typeof req.body.nom != "undefined") {
-                    data.nom = req.body.nom
+        try {
+            getEmailArticle().then((result) => {
+                data = result[0]
+                if (req.user.email == result[0].email) {
+                    if (typeof req.body.nom != "undefined") {
+                        data.nom = req.body.nom
+                    }
+                    if (typeof req.body.description != "undefined") {
+                        data.description = req.body.description
+                    }
+                    if (typeof req.body.prix != "undefined") {
+                        data.prix = req.body.prix
+                    }
+
+                    updateArticleRequest()
+                } else {
+                    res.status(401).json({ error: 'User do not match.' })
                 }
-                if (typeof req.body.description != "undefined") {
-                    data.description = req.body.description
-                }
-                if (typeof req.body.prix != "undefined") {
-                    data.prix = req.body.prix
-                }
-                if (typeof req.body.image != "undefined") {
-                    data.image = req.body.image
-                }
-                updateArticleRequest()
-            } else {
-                res.status(401).json({ error: 'User do not match.' })
-            }
-        })
+            })
+        } catch (error) { console.log(error.response.data) }
     }
     /**
      * Envoie de la requete de mise à jour
@@ -291,9 +292,11 @@ app.get('/update/:id', urlEncodedParser, passport.authenticate('jwt', { session:
         }
     }
 
-    updateArticle().then((result) => {
-        res.json(result)
-    })
+    try {
+        updateArticle().then((result) => {
+            res.json(result)
+        })
+    } catch (error) { console.log(error.response.data) }
 })
 
 nunjucks.configure('views', {
